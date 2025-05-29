@@ -33,6 +33,7 @@ public interface SqlSession extends Closeable {
 
   /**
    * Retrieve a single row mapped from the statement key.
+   * 泛型方法，参数表示使用的查询 SQL 语句，返回值为查询的结果对象
    * @param <T> the returned object type
    * @param statement
    * @return Mapped object
