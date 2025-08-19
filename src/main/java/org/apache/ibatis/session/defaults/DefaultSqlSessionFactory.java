@@ -98,14 +98,18 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     Transaction tx = null;
     try {
       // 找出要使用的指定环境
+        // 获取 mybatis-config.xml 配置文件中配置的 Environment 对象
       final Environment environment = configuration.getEnvironment();
       // 从环境中获取事务工厂
+        // 获取的 TransactionFactory 对象
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
       // 从事务工厂中生产事务
+        // 创建 Transaction 对象
       tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
       // 创建执行器
+        // 根据配置创建 Executor 对象
       final Executor executor = configuration.newExecutor(tx, execType);
-      // 创建DefaultSqlSession对象
+      // 创建 DefaultSqlSession 对象
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
       closeTransaction(tx); // may have fetched a connection so lets call close()
@@ -119,16 +123,23 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
     try {
       boolean autoCommit;
       try {
+          // 获取当前连接的事务是否为自动提交方式
         autoCommit = connection.getAutoCommit();
       } catch (SQLException e) {
         // Failover to true, as most poor drivers
         // or databases won't support transactions
+          // 当前数据库驱动提供的连接不支持事务，则可能会抛出异常
         autoCommit = true;
       }
+        // 获取 mybatis-config.xml 配置文件中配置的 Environment 对象
       final Environment environment = configuration.getEnvironment();
+        // 获取的 TransactionFactory 对象
       final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
+        // 创建 Transaction 对象
       final Transaction tx = transactionFactory.newTransaction(connection);
+        // 根据配置创建 Executor 对象
       final Executor executor = configuration.newExecutor(tx, execType);
+        // 创建 DefaultSqlSession 对象
       return new DefaultSqlSession(configuration, executor, autoCommit);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);

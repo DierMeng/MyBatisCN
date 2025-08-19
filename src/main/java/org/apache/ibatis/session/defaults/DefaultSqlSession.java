@@ -43,18 +43,23 @@ import org.apache.ibatis.session.SqlSession;
  * The default implementation for {@link SqlSession}.
  * Note that this class is not Thread-Safe.
  *
+ * DefaultSqlSession 中使用到了策略模式，DefaultSqlSession 扮演了 Context 的角色，
+ * 而将所有数据库相关的操作全部封装到 Executor 接口实现中，并通过 executor 字段选择不同的 Executor 实现。
+ *
  * @author Clinton Begin
  */
 public class DefaultSqlSession implements SqlSession {
-  // 配置信息
+  // 配置信息、Configuration 配置对象
   private final Configuration configuration;
-  // 执行器
+  // 执行器、底层依赖的 Executor 对象
   private final Executor executor;
-  // 是否自动提交
+  // 是否自动提交事务
   private final boolean autoCommit;
-  // 缓存是否已经被污染
+  // 缓存是否已经被污染、当前缓存中是否有脏数据
   private boolean dirty;
   // 游标列表
+  // 为防止用户忘记关闭已打开的游标对象，会通过 cursorList 字段记录由该 SqlSession 对象生成的游标对象，
+  // 在 DefaultSqlSession.close() 方法中会统一关闭这些游标对象
   private List<Cursor<?>> cursorList;
 
   public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {

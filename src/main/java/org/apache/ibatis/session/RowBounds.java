@@ -17,6 +17,7 @@ package org.apache.ibatis.session;
 
 /**
  * @author Clinton Begin
+ * 查询结果分页设置，即表明查询结果的起始位置和条数限制。
  */
 public class RowBounds {
 

@@ -458,6 +458,8 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   /**
    * 根据翻页限制条件跳过指定的行
+   * 通过内存分页实现的，也就是说 MyBatis 会向数据库查出所有的数据，然后在内存中略过一些数据后再开始读取。
+   * 虽然最终返回的是部分数据，但是向数据库请求的却是全部数据，因此这并不是一种高效的分页方式。
    * @param rs 结果集
    * @param rowBounds 翻页限制条件
    * @throws SQLException
